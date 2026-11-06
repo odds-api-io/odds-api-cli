@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+First release published from GitHub Actions with npm/PyPI trusted publishing and provenance. No code changes.
+
 ## 0.1.1
 
 - Fix: `value-bets` showed the EV column 100 times too large. `expectedValue` is bookmaker odds / fair odds x 100, so the column now shows the edge as `expectedValue - 100` (103.42 shows as 3.42%).
