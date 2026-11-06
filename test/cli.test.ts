@@ -196,8 +196,8 @@ describe('value bets and arbitrage', () => {
       {
         match: path('/value-bets'),
         body: [
-          { eventId: 1, bookmaker: 'Bet365', market: { name: 'ML' }, betSide: 'away', expectedValue: 0.01, bookmakerOdds: { away: '3.20' }, event: EVENT },
-          { eventId: 2, bookmaker: 'Bet365', market: { name: 'Totals', hdp: 2.5 }, betSide: 'over', expectedValue: 0.0523, bookmakerOdds: { over: '2.10' }, event: EVENT },
+          { eventId: 1, bookmaker: 'Bet365', market: { name: 'ML' }, betSide: 'away', expectedValue: 101, bookmakerOdds: { away: '3.20' }, event: EVENT },
+          { eventId: 2, bookmaker: 'Bet365', market: { name: 'Totals', hdp: 2.5 }, betSide: 'over', expectedValue: 105.23, bookmakerOdds: { over: '2.10' }, event: EVENT },
         ],
       },
     ]);
@@ -210,6 +210,40 @@ describe('value bets and arbitrage', () => {
     expect(lines[2]).toContain('Totals 2.5');
     expect(lines[2]).toContain('5.23%');
     expect(lines[3]).toContain('1.00%');
+  });
+
+  it('filters value bets by minimum edge in percent', async () => {
+    mockApi([
+      {
+        match: path('/value-bets'),
+        body: [
+          { eventId: 1, bookmaker: 'Bet365', market: { name: 'ML' }, betSide: 'away', expectedValue: 101.25, bookmakerOdds: { away: '3.20' }, event: EVENT },
+          { eventId: 2, bookmaker: 'Bet365', market: { name: 'Totals', hdp: 2.5 }, betSide: 'over', expectedValue: 103.42, bookmakerOdds: { over: '2.10' }, event: EVENT },
+          { eventId: 3, bookmaker: 'Bet365', market: { name: 'Spread', hdp: -1 }, betSide: 'home', expectedValue: 98.7, bookmakerOdds: { home: '1.90' }, event: EVENT },
+        ],
+      },
+    ]);
+    const { code, stdout } = await cli(['value-bets', '--bookmaker', 'Bet365', '--min-ev', '3']);
+    expect(code).toBe(0);
+    expect(stdout).toContain('3.42%');
+    expect(stdout).not.toContain('1.25%');
+    expect(stdout).not.toContain('Spread');
+  });
+
+  it('shows negative edge for expected values below 100', async () => {
+    mockApi([
+      {
+        match: path('/value-bets'),
+        body: [{ eventId: 3, bookmaker: 'Bet365', market: { name: 'ML' }, betSide: 'home', expectedValue: 98.7, bookmakerOdds: { home: '1.90' }, event: EVENT }],
+      },
+    ]);
+    const { stdout } = await cli(['value-bets', '--bookmaker', 'Bet365']);
+    expect(stdout).toContain('-1.30%');
+  });
+
+  it('rejects a non-numeric --min-ev', async () => {
+    const { code } = await cli(['value-bets', '--bookmaker', 'Bet365', '--min-ev', 'abc']);
+    expect(code).toBe(2);
   });
 
   it('requires --bookmaker for value bets', async () => {
@@ -225,7 +259,7 @@ describe('value bets and arbitrage', () => {
           {
             eventId: 123456,
             market: { name: 'ML', hdp: null },
-            profitMargin: 0.0215,
+            profitMargin: 2.48,
             legs: [
               { side: 'home', bookmaker: 'Bet365', odds: '2.15' },
               { side: 'away', bookmaker: 'SingBet', odds: '2.10' },
@@ -239,7 +273,7 @@ describe('value bets and arbitrage', () => {
     expect(code).toBe(0);
     expect(calls[0].searchParams.get('bookmakers')).toBe('Bet365,SingBet');
     expect(calls[0].searchParams.get('limit')).toBe('10');
-    expect(stdout).toContain('2.15%');
+    expect(stdout).toContain('2.48%');
     expect(stdout).toContain('home Bet365 2.15; away SingBet 2.10');
   });
 });
