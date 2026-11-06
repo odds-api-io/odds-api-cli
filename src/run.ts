@@ -29,8 +29,8 @@ Commands
       [--league <slug>] [--status pending,live,settled] [--from <iso>] [--to <iso>] [--limit <n>]
   odds <eventId>                  Odds for one event
       [--bookmakers Bet365,Unibet] [--market ML,Totals]
-  value-bets --bookmaker <name>   Value bets for a bookmaker
-      [--sport <slug>] [--league <slug>] [--limit <n>]
+  value-bets --bookmaker <name>   Value bets for a bookmaker, EV column = edge in percent
+      [--sport <slug>] [--league <slug>] [--min-ev <percent>] [--limit <n>]
   arbitrage --bookmakers <a,b>    Arbitrage opportunities across bookmakers
       [--limit <n>]
 
@@ -58,6 +58,7 @@ type Flags = {
   bookmakers?: string;
   bookmaker?: string;
   market?: string;
+  'min-ev'?: string;
 };
 
 export async function run(argv: string[], io: IO = defaultIO): Promise<number> {
@@ -81,6 +82,7 @@ export async function run(argv: string[], io: IO = defaultIO): Promise<number> {
         bookmakers: { type: 'string' },
         bookmaker: { type: 'string' },
         market: { type: 'string' },
+        'min-ev': { type: 'string' },
       },
     });
     flags = parsed.values as Flags;
@@ -155,6 +157,18 @@ function limitOf(flags: Flags): number | undefined {
   const n = Number(flags.limit);
   if (!Number.isInteger(n) || n <= 0) throw new UsageError('--limit must be a positive whole number');
   return n;
+}
+
+function minEdgeOf(flags: Flags): number | undefined {
+  if (flags['min-ev'] === undefined) return undefined;
+  const n = Number(flags['min-ev']);
+  if (flags['min-ev'].trim() === '' || !Number.isFinite(n)) throw new UsageError('--min-ev must be a number, the minimum edge in percent (3 means 3%)');
+  return n;
+}
+
+// expectedValue is bookmaker odds / fair odds x 100, so 103.4 is a 3.4% edge.
+function edgePercent(bet: any): number {
+  return Number(bet.expectedValue) - 100;
 }
 
 function print(ctx: Context, data: unknown, render: () => string) {
@@ -261,8 +275,10 @@ const COMMANDS: Record<string, Handler> = {
       league: flags.league,
       includeEventDetails: true,
     };
+    const minEdge = minEdgeOf(flags);
     let bets = (await client(ctx, true).getValueBets(params as any)) as any[];
     bets = [...bets].sort((a, b) => Number(b.expectedValue ?? 0) - Number(a.expectedValue ?? 0));
+    if (minEdge !== undefined) bets = bets.filter((b) => edgePercent(b) >= minEdge);
     const limit = limitOf(flags);
     if (limit) bets = bets.slice(0, limit);
     print(ctx, bets, () =>
@@ -274,7 +290,7 @@ const COMMANDS: Record<string, Handler> = {
           marketLabel(b.market),
           b.betSide,
           b.bookmakerOdds?.[b.betSide] ?? b.odds,
-          percent(Number(b.expectedValue) * 100),
+          percent(edgePercent(b)),
         ]),
       ),
     );
@@ -295,7 +311,7 @@ const COMMANDS: Record<string, Handler> = {
           formatDate(a.event?.date),
           eventLabel(a.event) || a.eventId,
           marketLabel(a.market),
-          percent(Number(a.profitMargin) * 100),
+          percent(a.profitMargin),
           (a.legs ?? []).map((l: any) => `${l.side} ${l.bookmaker} ${l.odds}`).join('; '),
         ]),
       ),

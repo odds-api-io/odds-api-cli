@@ -37,8 +37,8 @@ The odds API needs a key from a paid plan. Pick a plan at [odds-api.io/pricing](
 | `odds-api bookmakers` | List bookmakers |
 | `odds-api events --sport <slug>` | List events. Filters: `--league <slug>`, `--status pending,live,settled`, `--from <iso>`, `--to <iso>`, `--limit <n>` |
 | `odds-api odds <eventId>` | Odds for one event. `--bookmakers Bet365,Unibet` (defaults to the bookmakers selected on your account), `--market ML,Totals` |
-| `odds-api value-bets --bookmaker <name>` | Value bets for a bookmaker, highest expected value first. Filters: `--sport`, `--league`, `--limit` |
-| `odds-api arbitrage --bookmakers <a,b>` | Arbitrage opportunities across bookmakers. `--limit <n>` |
+| `odds-api value-bets --bookmaker <name>` | Value bets for a bookmaker, highest expected value first. The EV column is the edge in percent (`expectedValue - 100`, so an `expectedValue` of 103.4 shows as 3.40%). Filters: `--sport`, `--league`, `--min-ev <percent>`, `--limit` |
+| `odds-api arbitrage --bookmakers <a,b>` | Arbitrage opportunities across bookmakers. The Profit column is `profitMargin`, already a percentage. `--limit <n>` |
 
 Global options:
 
@@ -60,6 +60,9 @@ odds-api odds 123456 --bookmakers Bet365,DraftKings --market Totals
 
 # Top 10 value bets on Bet365 for MLB
 odds-api value-bets --bookmaker Bet365 --sport baseball --league usa-mlb --limit 10
+
+# Value bets on Bet365 with at least a 3% edge
+odds-api value-bets --bookmaker Bet365 --min-ev 3
 
 # Arbitrage between three bookmakers, as JSON for jq
 odds-api arbitrage --bookmakers Bet365,FanDuel,Unibet --json | jq '.[0]'
