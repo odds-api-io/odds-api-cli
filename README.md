@@ -74,7 +74,10 @@ odds-api arbitrage --bookmakers Bet365,FanDuel,Unibet --json | jq '.[0]'
 
 ## Documentation
 
-- [API documentation](https://docs.odds-api.io/)
+- [CLI guide: install, commands and examples](https://docs.odds-api.io/guides/cli)
+- [Quickstart: make your first request](https://docs.odds-api.io/quickstart)
+- [Find value bets](https://docs.odds-api.io/guides/value-bets) and [arbitrage opportunities](https://docs.odds-api.io/guides/arbitrage-bets)
+- [Full API reference](https://docs.odds-api.io/api-reference/introduction)
 - [Node.js SDK](https://github.com/odds-api-io/odds-api-node) and [Python SDK](https://github.com/odds-api-io/odds-api-python)
 - [MCP server](https://github.com/odds-api-io/odds-api-mcp-server) for Claude, Cursor and other AI agents
 
