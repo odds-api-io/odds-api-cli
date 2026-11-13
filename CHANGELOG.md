@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Docs: `--help` and the README link to the market reference at https://odds-api.io/markets for `--market` names.
+
 ## 0.1.2
 
 First release published from GitHub Actions with npm/PyPI trusted publishing and provenance. No code changes.
