@@ -1,6 +1,6 @@
 {
   "name": "odds-api-cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Command-line client for the Odds-API.io sports betting odds API: live and pre-match odds, value bets and arbitrage from 450+ bookmakers in your terminal",
   "keywords": [
     "odds api",
