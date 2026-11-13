@@ -40,6 +40,7 @@ Options
   -h, --help     Show this help
   -v, --version  Show the version
 
+Market names per sport: https://odds-api.io/markets
 Get an API key at ${PRICING_URL}`;
 
 class UsageError extends Error {}

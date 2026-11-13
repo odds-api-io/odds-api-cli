@@ -36,7 +36,7 @@ The odds API needs a key from a paid plan. Pick a plan at [odds-api.io/pricing](
 | `odds-api sports` | List sports and their slugs |
 | `odds-api bookmakers` | List bookmakers |
 | `odds-api events --sport <slug>` | List events. Filters: `--league <slug>`, `--status pending,live,settled`, `--from <iso>`, `--to <iso>`, `--limit <n>` |
-| `odds-api odds <eventId>` | Odds for one event. `--bookmakers Bet365,Unibet` (defaults to the bookmakers selected on your account), `--market ML,Totals` |
+| `odds-api odds <eventId>` | Odds for one event. `--bookmakers Bet365,Unibet` (defaults to the bookmakers selected on your account), `--market ML,Totals` (market names per sport: [odds-api.io/markets](https://odds-api.io/markets)) |
 | `odds-api value-bets --bookmaker <name>` | Value bets for a bookmaker, highest expected value first. The EV column is the edge in percent (`expectedValue - 100`, so an `expectedValue` of 103.4 shows as 3.40%). Filters: `--sport`, `--league`, `--min-ev <percent>`, `--limit` |
 | `odds-api arbitrage --bookmakers <a,b>` | Arbitrage opportunities across bookmakers. The Profit column is `profitMargin`, already a percentage. `--limit <n>` |
 
