@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.3 (2026-11-13)
 
 - Docs: `--help` and the README link to the market reference at https://odds-api.io/markets for `--market` names.
 
