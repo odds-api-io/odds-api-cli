@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4 (2026-11-20)
+
+- Docs: coverage is now 500+ bookmakers in the package description and README.
+
 ## 0.1.3 (2026-11-13)
 
 - Docs: `--help` and the README link to the market reference at https://odds-api.io/markets for `--market` names.
