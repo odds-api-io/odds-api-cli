@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/odds-api-cli.svg)](https://www.npmjs.com/package/odds-api-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Command-line client for the [Odds-API.io](https://odds-api.io) sports betting odds API. List sports, events and bookmakers, compare live and pre-match odds, and find value bets and arbitrage from 500+ bookmakers across 34 sports, straight from your terminal.
+Command-line client for the [Odds-API.io](https://odds-api.io) sports betting odds API. List sports, events and bookmakers, compare live and pre-match odds, and find value bets and arbitrage from 500+ bookmakers across 37 sports, straight from your terminal.
 
 Built on the official [Node.js SDK](https://github.com/odds-api-io/odds-api-node).
 
@@ -70,7 +70,7 @@ odds-api arbitrage --bookmakers Bet365,FanDuel,Unibet --json | jq '.[0]'
 
 ## Sports and bookmakers
 
-34 sports, including football (soccer), basketball, American football, baseball, ice hockey, tennis and esports, with odds from 500+ bookmakers such as Bet365, DraftKings, FanDuel, Betfair and Unibet. See the [full coverage list](https://odds-api.io/sportsbooks#coverage).
+37 sports, including football (soccer), basketball, American football, baseball, ice hockey, tennis and esports, with odds from 500+ bookmakers such as Bet365, DraftKings, FanDuel, Betfair and Unibet. See the [full coverage list](https://odds-api.io/sportsbooks#coverage).
 
 ## Documentation
 
